@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify
+from ..extensions import db
 
 main_bp = Blueprint('main', __name__)
 
@@ -9,10 +10,13 @@ def index():
 @main_bp.route('/seed')
 def seed():
     from ..models import Product, Admin
+    # Automatically create tables if they don't exist
+    db.create_all()
+    
     # Create Admin
-    if not Admin.query.filter_by(username='admin').first():
-        admin = Admin(username='admin')
-        admin.set_password('admin123')
+    if not Admin.query.filter_by(username='admin@gmail.com').first():
+        admin = Admin(username='admin@gmail.com')
+        admin.set_password('Admin')
         db.session.add(admin)
     
     # Create Sample Products
